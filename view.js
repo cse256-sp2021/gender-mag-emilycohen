@@ -1,10 +1,36 @@
 // ---- Define your dialogs  and panels here ----
+effective_permissions_panel = define_new_effective_permissions('new_permissions', add_info_col = true, which_permissions = null)
+$('#sidepanel').append(effective_permissions_panel)
+$('#new_permissions').attr('filepath','/C/presentation_documents/important_file.txt')
+new_user = define_new_user_select_field('new_user_field', 'Select a User', function(selected_user) {
+    $('#new_permissions').attr('username', selected_user)
+ })
+$('#sidepanel').append(new_user)
+dial = define_new_dialog('new_dial', 'Information', {})
+$('.perm_info').click(function(){
 
+    // stuff that should happen on click goes here
+    console.log('clicked!')
+    dial.dialog('open')
+    path = $('#new_permissions').attr('filepath')
+    user = $('#new_permissions').attr('username')
+    permission = $(this).attr('permission_name')
+    console.log(path)
+    console.log(user)
+    console.log(permission)
+    file_obj = path_to_file[path]
+    user_obj = all_users[user]
+    console.log(user_obj)
+    console.log(all_users)
+    dial.text(get_explanation_text(allow_user_action(file_obj, user_obj, permission,true)))
+    
+
+})
 
 
 // ---- Display file structure ----
 
-// (recursively) makes and returns an html element (wrapped in a jquery object) for a given file object
+// (recursively) makes and returns an html element (wrapped in a jquery object) for a given f ile object
 function make_file_element(file_obj) {
     let file_hash = get_full_path(file_obj)
 
