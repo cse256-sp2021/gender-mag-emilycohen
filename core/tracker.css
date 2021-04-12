@@ -28,3 +28,21 @@
 .top-banner-button:hover {
     background-color: rgb(255, 97, 40);
 }
+
+#filestructure {
+    padding-left:20px;
+    padding-top: 20px;
+}
+
+#mainTitle {
+    text-align: center;
+    margin:10px;
+    /* padding:10px; */
+    font-size:44px;
+}
+
+#directions{
+    margin:20px;
+    text-align: center;
+    
+}

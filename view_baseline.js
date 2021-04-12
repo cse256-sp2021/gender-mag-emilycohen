@@ -1,6 +1,6 @@
 // Configuration
 // show_starter_dialogs = true // set this to "false" to disable the survey and 3-minute timer. Set to "true" before submitting to MTurk!!
-show_starter_dialogs = false 
+show_starter_dialogs = true
 
 
 // ---- Set up main Permissions dialog ----
@@ -10,7 +10,7 @@ show_starter_dialogs = false
 perm_dialog = define_new_dialog('permdialog', title='Permissions', options = {
     // The following are standard jquery-ui options. See https://jqueryui.com/dialog/
     height: 500,
-    width: 400,
+    width: 750,
     buttons: {
         OK:{
             text: "OK",
@@ -31,10 +31,12 @@ perm_dialog = define_new_dialog('permdialog', title='Permissions', options = {
 
 // Make the initial "Object Name:" text:
 // If you pass in valid HTML to $(), it will *create* elements instead of selecting them. (You still have to append them, though)
-obj_name_div = $('<div id="permdialog_objname" class="section">Object Name: <span id="permdialog_objname_namespan"></span> </div>')
+// obj_name_div = $('<div id="permdialog_objname" class="section">Object Name: <span id="permdialog_objname_namespan"></span> </div>')
+obj_name_div = $('<div id="permdialog_objname"  class="section"><b>Current File Path: </b> <span id="permdialog_objname_namespan"></span> </div>')
 
 //Make the div with the explanation about special permissions/advanced settings:
-advanced_expl_div = $('<div id="permdialog_advanced_explantion_text">For special permissions or advanced settings, click Advanced.</div>')
+
+advanced_expl_div = $('<div id="permdialog_advanced_explantion_text"><i>Gray checkboxes are inherited and thus cannot be modified directly.</i><br /><b>For special permissions and additinal settings, click Advanced.</b></div>')
 
 // Make the (grouped) permission checkboxes table:
 grouped_permissions = define_grouped_permission_checkboxes('permdialog_grouped_permissions')
@@ -46,11 +48,11 @@ file_permission_users = define_single_select_list('permdialog_file_user_list', f
     grouped_permissions.attr('username', selected_user)
 })
 file_permission_users.css({
-    'height':'80px',
+    'height':'115px',
 })
 
 // Make button to add a new user to the list:
-perm_add_user_select = define_new_user_select_field('perm_add_user', 'Add...', on_user_change = function(selected_user){
+perm_add_user_select = define_new_user_select_field('perm_add_user', 'Add User', on_user_change = function(selected_user){
     let filepath = perm_dialog.attr('filepath')
     if(selected_user && (selected_user.length > 0) && (selected_user in all_users)) { // sanity check that a user is actually selected (and exists)
         let expected_user_elem_id = `permdialog_file_user_${selected_user}`
@@ -121,7 +123,7 @@ let are_you_sure_dialog = define_new_dialog('are_you_sure_dialog', "Are you sure
 are_you_sure_dialog.text('Do you want to remove permissions for this user?')
 
 // Make actual "remove" button:
-perm_remove_user_button  = $('<button id="perm_remove_user" class="ui-button ui-widget ui-corner-all">Remove</button>')
+perm_remove_user_button  = $('<button id="perm_remove_user" class="ui-button ui-widget ui-corner-all">Remove User</button>')
 perm_remove_user_button.click(function(){
     // Get the current user and filename we are working with:
     let selected_username = file_permission_users.attr('selected_item')
@@ -147,7 +149,7 @@ perm_remove_user_button.click(function(){
 
 // --- Append all the elements to the permissions dialog in the right order: --- 
 perm_dialog.append(obj_name_div)
-perm_dialog.append($('<div id="permissions_user_title">Group or user names:</div>'))
+perm_dialog.append($('<div id="permissions_user_title"><b>Current Groups or Users:</b></div>'))
 perm_dialog.append(file_permission_users)
 perm_dialog.append(perm_add_user_select)
 perm_add_user_select.append(perm_remove_user_button) // Cheating a bit again - add the remove button the the 'add user select' div, just so it shows up on the same line.
@@ -320,7 +322,7 @@ $( "#advtabs" ).tabs({
 let adv_contents = $(`#advdialog`).dialog({
     position: { my: "top", at: "top", of: $('#html-loc') },
     width: 700,
-    height: 450,
+    height: 600,
     modal: true,
     autoOpen: false,
     appendTo: "#html-loc",
@@ -355,10 +357,9 @@ $('#adv_perm_inheritance').change(function(){
     else {
         // has just been turned off - pop up dialog with add/remove/cancel
         $(`<div id="add_remove_cancel" title="Security">
-            Warning: if you proceed, inheritable permissions will no longer propagate to this object.<br/>
-            - Click Add to convert and add inherited parent permissions as explicit permissions on this object<br/>
-            - Click Remove to remove inherited parent permissions from this object<br/>
-            - Click Cancel if you do not want to modify inheritance settings at this time.<br/>
+            <i>Note: if you proceed, inheritable permissions will no longer propagate to this object.</i><br/>
+            - Click <b>Add</b> to convert and add inherited parent permissions as explicit permissions on this object<br/>
+            - Click <b>Remove</b> to remove inherited parent permissions from this object<br/>
         </div>`).dialog({ // TODO: don't create this dialog on the fly
             modal: true,
             width: 400,
@@ -412,14 +413,14 @@ $('#adv_perm_replace_child_permissions').change(function(){
         let file_obj = path_to_file[filepath]
         $(`<div id="replace_perm_dialog" title="Security">
             This will replace explicitly defined permissions on all descendants of this object with inheritable permissions from ${file_obj.filename}.<br/>
-            Do you wish to continue?
+            
         </div>`).dialog({
             modal: true,
             position: { my: "top", at: "top", of: $('#html-loc') },
             width: 400,
             buttons: {
                 Yes:  {
-                    text: "Yes",
+                    text: "OK",
                     id: "adv-replace-yes-button",
                     click: function() {
                         let filepath = $('#advdialog').attr('filepath')
@@ -431,7 +432,7 @@ $('#adv_perm_replace_child_permissions').change(function(){
                     },
                 },
                 No: {
-                    text: "No",
+                    text: "Cancel",
                     id: "adv-replace-no-button",
                     click: function() {
                         $('#adv_perm_replace_child_permissions').prop('checked', false) // undo checking
@@ -616,7 +617,7 @@ If you complete the task early, you will also be able to submit the answer as so
 You will still get paid if you don't finish the task, but you have to try.
 </div>`).dialog({
     modal:true,
-    width: 700,
+    width: 750,
     //height: 350,
     appendTo: "#html-loc",
     dialogClass: "no-close",
@@ -702,8 +703,8 @@ $(`<div id="survey-dialog" title="Survey">
     </form>
 </div>`).dialog({
     modal:true,
-    width: 700,
-    height: 500,
+    width: 750,
+    height: 600,
     autoOpen: show_starter_dialogs,
     appendTo: "#html-loc",
     dialogClass: "no-close",

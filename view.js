@@ -1,4 +1,5 @@
 // ---- Define your dialogs  and panels here ----
+
 effective_permissions_panel = define_new_effective_permissions('new_permissions', add_info_col = true, which_permissions = null)
 $('#sidepanel').append(effective_permissions_panel)
 $('#new_permissions').attr('filepath','/C/presentation_documents/important_file.txt')
@@ -40,7 +41,9 @@ function make_file_element(file_obj) {
                 <span class="oi oi-folder" id="${file_hash}_icon"/> ${file_obj.filename} 
                 <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
                     <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/> 
+                    Permissions
                 </button>
+                
             </h3>
         </div>`)
 
@@ -60,6 +63,7 @@ function make_file_element(file_obj) {
             <span class="oi oi-file" id="${file_hash}_icon"/> ${file_obj.filename}
             <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
                 <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/> 
+                Permissions
             </button>
         </div>`)
     }
